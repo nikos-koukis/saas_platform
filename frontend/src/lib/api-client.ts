@@ -20,7 +20,7 @@ export class ApiError extends Error {
   }
 }
 
-type Envelope<T> = { data: T; meta?: PageMeta };
+export type Envelope<T> = { data: T; meta?: PageMeta };
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<Envelope<T>> {
   let response: Response;
@@ -64,3 +64,6 @@ export const api = {
 
 /** SWR fetcher for endpoints that return a bare object. */
 export const fetcher = <T>(path: string) => api.get<T>(path).then((envelope) => envelope.data);
+
+/** SWR fetcher for list endpoints, keeping the pagination metadata. */
+export const listFetcher = <T>(path: string) => api.get<T[]>(path);

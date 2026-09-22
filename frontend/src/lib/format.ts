@@ -31,3 +31,14 @@ export function describeDeadline(iso: string): string {
   if (days === -1) return "1 day overdue";
   return `${Math.abs(days)} days overdue`;
 }
+
+/** Two letters for an avatar placeholder: "Leanne Graham" -> "LG". */
+export function initials(name: string): string {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+}

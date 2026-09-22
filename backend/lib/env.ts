@@ -5,6 +5,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32, "must be at least 32 characters"),
   JWT_EXPIRES_IN: z.string().default("7d"),
   CORS_ORIGIN: z.url().default("http://localhost:3000"),
+  // Only needed when the API and UI live on different subdomains of one site.
+  COOKIE_DOMAIN: z.string().min(1).optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 

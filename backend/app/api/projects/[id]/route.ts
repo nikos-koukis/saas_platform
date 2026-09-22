@@ -44,7 +44,7 @@ export const DELETE = authedRoute<Params>(async (_request, { params }) => {
 
 async function applyUpdate(id: string, input: Record<string, unknown>) {
   const updated = await Project.findByIdAndUpdate(id, input, {
-    new: true,
+    returnDocument: "after",
     // Schema rules are not applied to updates unless asked for explicitly.
     runValidators: true,
   })

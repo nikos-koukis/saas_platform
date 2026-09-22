@@ -29,11 +29,23 @@ export const projectFormSchema = z.object({
   status: z.enum(PROJECT_STATUSES),
   deadline: z.string().min(1, "Pick a deadline"),
   assignee: z.string().min(1, "Choose a team member"),
-  budget: z.coerce
-    .number<number>({ error: "Budget must be a number" })
-    .min(0, "Budget cannot be negative")
-    .max(1_000_000_000, "Budget is unrealistically large"),
+  // An <input type="number"> hands back a string, and an empty one hands back
+  // "". Piping keeps the field typed as a string while the parsed form of the
+  // value is a number, so "" reports as missing instead of coercing to zero.
+  budget: z
+    .string()
+    .min(1, "Budget is required")
+    .transform(Number)
+    .pipe(
+      z
+        .number({ error: "Budget must be a number" })
+        .min(0, "Budget cannot be negative")
+        .max(1_000_000_000, "Budget is unrealistically large"),
+    ),
 });
 
 export type CredentialValues = z.infer<ReturnType<typeof credentialsSchema>>;
-export type ProjectFormValues = z.infer<typeof projectFormSchema>;
+/** What the inputs hold. */
+export type ProjectFormInput = z.input<typeof projectFormSchema>;
+/** What a valid submit produces. */
+export type ProjectFormValues = z.output<typeof projectFormSchema>;

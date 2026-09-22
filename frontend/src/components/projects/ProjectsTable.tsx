@@ -9,6 +9,7 @@ import { formatBudget } from "@/lib/format";
 import type { Project } from "@/lib/types";
 import { Assignee } from "./Assignee";
 import { DeadlineCell } from "./DeadlineCell";
+import { RowActions } from "./RowActions";
 
 const COLUMNS: { key: SortColumn; label: string; numeric?: boolean }[] = [
   { key: "name", label: "Project" },
@@ -21,9 +22,11 @@ type Props = {
   projects: Project[];
   filters: ProjectFilters;
   onSort: (column: SortColumn) => void;
+  onEdit: (project: Project) => void;
+  onDelete: (project: Project) => void;
 };
 
-export function ProjectsTable({ projects, filters, onSort }: Props) {
+export function ProjectsTable({ projects, filters, onSort, onEdit, onDelete }: Props) {
   return (
     <>
       {/* Wide screens get a table; narrow ones get cards, because a five-column
@@ -43,6 +46,9 @@ export function ProjectsTable({ projects, filters, onSort }: Props) {
             ))}
             <th scope="col" className="px-4 py-3 font-medium text-muted">
               Assignee
+            </th>
+            <th scope="col" className="px-4 py-3">
+              <span className="sr-only">Actions</span>
             </th>
           </tr>
         </thead>
@@ -66,6 +72,9 @@ export function ProjectsTable({ projects, filters, onSort }: Props) {
               </td>
               <td className="w-56 px-4 py-3">
                 <Assignee member={project.assignee} />
+              </td>
+              <td className="w-24 px-4 py-3">
+                <RowActions project={project} onEdit={onEdit} onDelete={onDelete} />
               </td>
             </tr>
           ))}
@@ -91,6 +100,10 @@ export function ProjectsTable({ projects, filters, onSort }: Props) {
                 <p className="tabular-nums font-medium text-ink">{formatBudget(project.budget)}</p>
                 <DeadlineCell deadline={project.deadline} status={project.status} />
               </div>
+            </div>
+
+            <div className="border-t border-border pt-2">
+              <RowActions project={project} onEdit={onEdit} onDelete={onDelete} />
             </div>
           </li>
         ))}

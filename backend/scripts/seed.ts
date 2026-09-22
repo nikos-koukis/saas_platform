@@ -74,6 +74,13 @@ async function seed() {
   console.log("Seeding\n");
   await connectToDatabase();
 
+  // Compose runs this on every `up`. With --if-empty it fills a fresh volume
+  // once and then leaves anything created since alone.
+  if (process.argv.includes("--if-empty") && (await Project.countDocuments()) > 0) {
+    console.log("  database already populated; nothing to do\n");
+    return;
+  }
+
   const { entries, source } = await fetchRoster();
   console.log(`  roster source: ${source}`);
 
